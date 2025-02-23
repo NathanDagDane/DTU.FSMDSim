@@ -3,7 +3,7 @@
 import sys
 import xmltodict
 
-print("Welcome to the FSMD simulator! - Version ?? - Designed by ??")
+print("Welcome to the FSMD simulator! - Version 0.1 - Designed by the lads")
 
 if len(sys.argv) < 3:
     print('Too few arguments.')
@@ -236,11 +236,66 @@ state = initial_state
 
 print('\n---Start simulation---')
 
-######################################
-######################################
-# Write your code here!
-######################################
-######################################
+# -- Initiate Simulation --
+def init_simulation():
+    # TODO: Set initial state
+    # TODO: Set input variables
+    print(f"At the beginning of the simulation the status is:\nVariables:")
+    for var in variables:
+        print(f"  {var}: {variables[var]}")
+    print(f"Initial state: {state}")
+
+# -- Print begin and end state of each cycle --
+def print_init_cycle():
+    print("--------------------------------------------------")
+    print(f"Cycle: {cycle}")
+    print(f"Current state: {state}")
+    print("Inputs:")
+    for inp in inputs:
+        print(f"  {inp}: {inputs[inp]}")
+
+def print_end_cycle():
+    print(f"Next state: {state}")
+    print(f"At the end of cycle {cycle} execution, the status is:")
+    print("Variables:")
+    for var in variables:
+        print(f"  {var}: {variables[var]}")
+
+# -- Perform cycle --
+def perform_cycle():
+    global cycle, state
+    print_init_cycle()
+    sel_condition = None
+    sel_instruction = "NOP"
+
+    # TODO: Loopthrough transitions checking conditions
+    # TODO: Set sel_condition, sel_instruction variables
+
+    print(f"The condition ({sel_condition}) is true.")
+    print(f"Executing instruction: {sel_instruction}")
+    execute_instruction(sel_instruction)
+
+    cycle += 1
+    # TODO: Update state
+
+    # (Temporary to stop infinite loop:)
+    if cycle == 10:
+        state = 'FINISH'
+
+    print_end_cycle()
+
+# -- Run simulation --
+def run_simulation():
+    while state != 'FINISH':
+        perform_cycle()
+    # Reached final state. Perform finishing cycle
+    perform_cycle()
+    # End
+    print("--------------------------------------------------")
+    print("End-state reached.")
+    print("End of simulation. Goodbye!")
+
+run_simulation()
 
 print('\n---End of simulation---')
 
