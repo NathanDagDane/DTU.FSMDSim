@@ -269,8 +269,7 @@ def perform_cycle():
 
 
     print_init_cycle()
-    sel_condition = None
-    sel_instruction = "NOP"
+    sel_condition = sel_instruction = None
 
     # Loop through transitions checking conditions
     for transition in fsmd[state]:
@@ -280,9 +279,15 @@ def perform_cycle():
             state = transition['nextstate']
             break
 
-    print(f"The condition ({sel_condition}) is true.")
-    print(f"Executing instruction: {sel_instruction}")
-    execute_instruction(sel_instruction)
+    try:
+        print(f"The condition ({sel_condition}) is true.")
+        print(f"Executing instruction: {sel_instruction}")
+        execute_instruction(sel_instruction)
+    except:
+        # Failed to perform instruction (transition not found or faulty instruction)
+        print("!----!----!----!----!----!----!----!----!----!----")
+        print("Incorrect instruction.")
+        state = fsmd_stim['fsmdstimulus']['endstate']
 
     print_end_cycle()
     cycle += 1
@@ -296,7 +301,7 @@ def run_simulation():
 
     init_simulation()
     end_state = fsmd_stim['fsmdstimulus']['endstate']
-    while state != end_state:
+    while (state != end_state) & (cycle < iterations):
         perform_cycle()
     # Reached final state. Perform finishing cycle
     perform_cycle()
