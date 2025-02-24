@@ -232,14 +232,14 @@ def merge_dicts(*dict_args):
 #######################################
 # Start to simulate
 cycle = 0
-state = initial_state
-
 print('\n---Start simulation---')
 
 # -- Initiate Simulation --
 def init_simulation():
-    # TODO: Set initial state
-    # TODO: Set input variables
+    global cycle, state
+    cycle = 0
+    state = initial_state
+
     print(f"At the beginning of the simulation the status is:\nVariables:")
     for var in variables:
         print(f"  {var}: {variables[var]}")
@@ -266,7 +266,9 @@ def perform_cycle():
     global cycle, state
 
     # Set inputs
-
+    for input in fsmd_stim['fsmdstimulus']['setinput']:
+        if int(input['cycle']) == cycle:
+            execute_setinput(input['expression'])
 
     print_init_cycle()
     sel_condition = sel_instruction = None
@@ -293,12 +295,7 @@ def perform_cycle():
     cycle += 1
 
 # -- Run simulation --
-def run_simulation():
-
-    for input in fsmd_stim['fsmdstimulus']['setinput']:
-        if int(input['cycle']) == cycle:
-            execute_setinput(input['expression'])
-
+def main():
     init_simulation()
     end_state = fsmd_stim['fsmdstimulus']['endstate']
     while (state != end_state) & (cycle < iterations):
@@ -310,43 +307,4 @@ def run_simulation():
     print("End-state reached.")
     print("End of simulation. Goodbye!")
 
-run_simulation()
-
-print('\n---End of simulation---')
-
-#
-# Description:
-# This is a code snippet used to update the inputs values according to the
-# stimuli file content. You can see here how the 'fsmd_stim' variable is used.
-#
-'''
-try:
-    if (not(fsmd_stim['fsmdstimulus']['setinput'] is None)):
-        for setinput in fsmd_stim['fsmdstimulus']['setinput']:
-            if type(setinput) is str:
-                #Only one element
-                if int(fsmd_stim['fsmdstimulus']['setinput']['cycle']) == cycle:
-                    execute_setinput(fsmd_stim['fsmdstimulus']['setinput']['expression'])
-                break
-            else:
-                #More than 1 element
-                if int(setinput['cycle']) == cycle:
-                    execute_setinput(setinput['expression'])
-except:
-    pass
-'''
-
-#
-# Description:
-# This is a code snipppet used to check the endstate value according to the
-# stimuli file content. You can see here how the 'fsmd_stim' variable is used.
-#
-'''
-try:
-    if (not(fsmd_stim['fsmdstimulus']['endstate'] is None)):
-        if state == fsmd_stim['fsmdstimulus']['endstate']:
-            print('End-state reached.')
-            repeat = False
-except:
-    pass
-'''
+main()
