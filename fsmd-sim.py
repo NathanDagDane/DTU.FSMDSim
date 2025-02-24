@@ -264,30 +264,39 @@ def print_end_cycle():
 # -- Perform cycle --
 def perform_cycle():
     global cycle, state
+
+    # Set inputs
+
+
     print_init_cycle()
     sel_condition = None
     sel_instruction = "NOP"
 
-    # TODO: Loop through transitions checking conditions
-    # TODO: Set sel_condition, sel_instruction variables
+    # Loop through transitions checking conditions
+    for transition in fsmd[state]:
+        if evaluate_condition(transition['condition']):
+            sel_condition = transition['condition']
+            sel_instruction = transition['instruction']
+            state = transition['nextstate']
+            break
 
     print(f"The condition ({sel_condition}) is true.")
     print(f"Executing instruction: {sel_instruction}")
     execute_instruction(sel_instruction)
 
-    cycle += 1
-    # TODO: Update state
-
-    # (Temporary to stop infinite loop:)
-    if cycle == 10:
-        state = 'FINISH'
-
     print_end_cycle()
+    cycle += 1
 
 # -- Run simulation --
 def run_simulation():
+
+    for input in fsmd_stim['fsmdstimulus']['setinput']:
+        if int(input['cycle']) == cycle:
+            execute_setinput(input['expression'])
+
     init_simulation()
-    while state != 'FINISH':
+    end_state = fsmd_stim['fsmdstimulus']['endstate']
+    while state != end_state:
         perform_cycle()
     # Reached final state. Perform finishing cycle
     perform_cycle()
