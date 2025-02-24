@@ -268,7 +268,7 @@ def perform_cycle():
     sel_condition = None
     sel_instruction = "NOP"
 
-    # TODO: Loopthrough transitions checking conditions
+    # TODO: Loop through transitions checking conditions
     # TODO: Set sel_condition, sel_instruction variables
 
     print(f"The condition ({sel_condition}) is true.")
@@ -286,6 +286,7 @@ def perform_cycle():
 
 # -- Run simulation --
 def run_simulation():
+    init_simulation()
     while state != 'FINISH':
         perform_cycle()
     # Reached final state. Perform finishing cycle
