@@ -3,7 +3,7 @@
 import sys
 import xmltodict
 
-print("Welcome to the FSMD simulator! - Version ?? - Designed by ??")
+print("Welcome to the FSMD simulator! - Version 1 - Designed by the lads")
 
 if len(sys.argv) < 3:
     print('Too few arguments.')
@@ -12,7 +12,9 @@ elif (len(sys.argv) >4):
     print('Too many arguments.')
     sys.exit(-1)
 
+# Define variables
 iterations = int(sys.argv[1])
+cycle = 0
 
 #Parsing the FSMD description file
 with open(sys.argv[2]) as fd:
@@ -26,27 +28,18 @@ if len(sys.argv) == 4:
 
 print("\n--FSMD description--")
 
-#
-# Description:
-# The 'states' variable of type 'list' contains the list of all states names.
-#
 states = fsmd_des['fsmddescription']['statelist']['state']
 print("States:")
 for state in states:
     print('  ' + state)
-#
-# Description:
-# The 'initial_state' variable of type 'string' contains the initial_state name.
-#
+
 initial_state = fsmd_des['fsmddescription']['initialstate']
 print("Initial state:")
 print('  ' + initial_state)
 
-#
-# Description:
-# The 'inputs' variable of type 'dictionary' contains the list of all inputs
-# names and value. The default value is 0.
-#
+end_state = fsmd_stim['fsmdstimulus']['endstate']
+
+# List of input variables
 inputs = {}
 if(fsmd_des['fsmddescription']['inputlist'] is None):
     inputs = {}
@@ -63,11 +56,7 @@ print("Inputs:")
 for input_i in inputs:
     print('  ' + input_i)
 
-#
-# Description:
-# The 'variables' variable of type 'dictionary' contains the list of all variables
-# names and value. The default value is 0.
-#
+# List of variables
 variables = {}
 if(fsmd_des['fsmddescription']['variablelist'] is None):
     variables = {}
@@ -84,11 +73,7 @@ print("Variables:")
 for variable in variables:
     print('  ' + variable)
 
-#
-# Description:
-# The 'operations' variable of type 'dictionary' contains the list of all the
-# defined operations names and expressions.
-#
+# List of all defined operations
 operations = {}
 if(fsmd_des['fsmddescription']['operationlist'] is None):
     operations = {}
@@ -107,11 +92,7 @@ print("Operations:")
 for operation in operations:
     print('  ' + operation + ' : ' + operations[operation])
 
-#
-# Description:
-# The 'conditions' variable of type 'dictionary' contains the list of all the
-# defined conditions names and expressions.
-#
+# List of all possible conditions
 conditions = {}
 if(fsmd_des['fsmddescription']['conditionlist'] is None):
     conditions = {}
@@ -129,12 +110,7 @@ print("Conditions:")
 for condition in conditions:
     print('  ' + condition + ' : ' + conditions[condition])
 
-#
-# Description:
-# The 'fsmd' variable of type 'dictionary' contains the list of dictionaries,
-# one per state, with the fields 'condition', 'instruction', and 'nextstate'
-# describing the FSMD transition table.
-#
+# List of states and their transitions
 fsmd = {}
 for state in states:
     fsmd[state] = []
@@ -157,11 +133,7 @@ for state in fsmd:
         print('    ' + 'nextstate: ' + transition['nextstate'] + ', condition: ' + transition['condition'] + ', instruction: ' + transition['instruction'])
 
 
-#
-# Description:
-# This function executes a Python compatible operation passed as string
-# on the operands stored in the dictionary 'inputs'
-#
+# -- Util Functions --
 def execute_setinput(operation):
     operation_clean = operation.replace(' ', '')
     operation_split = operation_clean.split('=')
@@ -170,12 +142,6 @@ def execute_setinput(operation):
     inputs[target] = eval(expression, {'__builtins__': None}, inputs)
     return
 
-
-#
-# Description:
-# This function executes a Python compatible operation passed as string
-# on the operands stored in the dictionaries 'variables' and 'inputs'
-#
 def execute_operation(operation):
     operation_clean = operation.replace(' ', '')
     operation_split = operation_clean.split('=')
@@ -184,12 +150,6 @@ def execute_operation(operation):
     variables[target] = eval(expression, {'__builtins__': None}, merge_dicts(variables, inputs))
     return
 
-
-#
-# Description:
-# This function executes a list of operations passed as string and spaced by
-# a single space using the expression defined in the dictionary 'operations'
-#
 def execute_instruction(instruction):
     if instruction == 'NOP' or instruction == 'nop':
         return
@@ -198,14 +158,6 @@ def execute_instruction(instruction):
         execute_operation(operations[operation])
     return
 
-
-#
-# Description:
-# This function evaluates a Python compatible boolean expressions of
-# conditions passed as string using the conditions defined in the variable 'conditions'
-# and using the operands stored in the dictionaries 'variables' and 'inputs
-# It returns True or False
-#
 def evaluate_condition(condition):
     if condition == 'True' or condition=='true' or condition == 1:
         return True
@@ -217,11 +169,6 @@ def evaluate_condition(condition):
     #print('----' + condition_explicit)
     return eval(condition_explicit, {'__builtins__': None}, merge_dicts(variables, inputs))
 
-
-#
-# Description:
-# Support function to merge two dictionaries.
-#
 def merge_dicts(*dict_args):
     result = {}
     for dictionary in dict_args:
@@ -229,54 +176,88 @@ def merge_dicts(*dict_args):
     return result
 
 
+
 #######################################
-# Start to simulate
-cycle = 0
-state = initial_state
+###       Start of simulation       ###
 
 print('\n---Start simulation---')
 
-######################################
-######################################
-# Write your code here!
-######################################
-######################################
+# -------- Initiate Simulation --------
+def init_simulation():
+    # Initiate variables
+    global cycle, state
+    cycle = 0
+    state = initial_state
+    # Print initial status
+    print(f"At the beginning of the simulation the status is:\nVariables:")
+    for var in variables:
+        print(f"  {var}: {variables[var]}")
+    print(f"Initial state: {state}")
 
-print('\n---End of simulation---')
+# -------- Print Begin and End State of Each Cycle --------
+def print_init_cycle():
+    print("--------------------------------------------------")
+    print(f"Cycle: {cycle}")
+    print(f"Current state: {state}")
+    print("Inputs:")
+    for inp in inputs:
+        print(f"  {inp}: {inputs[inp]}")
 
-#
-# Description:
-# This is a code snippet used to update the inputs values according to the
-# stimuli file content. You can see here how the 'fsmd_stim' variable is used.
-#
-'''
-try:
-    if (not(fsmd_stim['fsmdstimulus']['setinput'] is None)):
-        for setinput in fsmd_stim['fsmdstimulus']['setinput']:
-            if type(setinput) is str:
-                #Only one element
-                if int(fsmd_stim['fsmdstimulus']['setinput']['cycle']) == cycle:
-                    execute_setinput(fsmd_stim['fsmdstimulus']['setinput']['expression'])
-                break
-            else:
-                #More than 1 element
-                if int(setinput['cycle']) == cycle:
-                    execute_setinput(setinput['expression'])
-except:
-    pass
-'''
+def print_end_cycle():
+    print(f"Next state: {state}")
+    print(f"At the end of cycle {cycle} execution, the status is:")
+    print("Variables:")
+    for var in variables:
+        print(f"  {var}: {variables[var]}")
 
-#
-# Description:
-# This is a code snipppet used to check the endstate value according to the
-# stimuli file content. You can see here how the 'fsmd_stim' variable is used.
-#
-'''
-try:
-    if (not(fsmd_stim['fsmdstimulus']['endstate'] is None)):
-        if state == fsmd_stim['fsmdstimulus']['endstate']:
-            print('End-state reached.')
-            repeat = False
-except:
-    pass
-'''
+# -------- Perform Cycle --------
+def perform_cycle():
+    # Initiate variables for cycle
+    global cycle, state
+    sel_condition = sel_instruction = None
+    # Set inputs
+    for input in fsmd_stim['fsmdstimulus']['setinput']:
+        if int(input['cycle']) == cycle:
+            execute_setinput(input['expression'])
+
+    print_init_cycle()
+
+    # Loop through transitions checking conditions
+    for transition in fsmd[state]:
+        if evaluate_condition(transition['condition']):
+            # Save details of selected transition
+            sel_condition = transition['condition']
+            sel_instruction = transition['instruction']
+            state = transition['nextstate']
+            break
+
+    try:
+        # Apply details defined in transition
+        print(f"The condition ({sel_condition}) is true.")
+        print(f"Executing instruction: {sel_instruction}")
+        execute_instruction(sel_instruction)
+    except:
+        # Failed to perform instruction (transition not found or faulty instruction)
+        print("!----!----!----!----!----!----!----!----!----!----")
+        print("Incorrect instruction.")
+        state = end_state
+
+    print_end_cycle()
+    cycle += 1
+
+# -------- Run Simulation --------
+def main():
+    init_simulation()
+    while (state != end_state) & (cycle < iterations):
+        perform_cycle()
+    # Reached final state. Perform finishing cycle
+    perform_cycle()
+    # End
+    print("--------------------------------------------------")
+    print("End-state reached.")
+    print("End of simulation. Goodbye!")
+
+main()
+
+###        End of simulation        ###
+#######################################
