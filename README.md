@@ -11,10 +11,12 @@ Otherwise, make sure your environment has `python 3.12.9` and `xmltodict` packag
 ## Usage
 ### Test 2:
 Run the following command in the base folder of the repository:  
-```python3 fsmd-sim.py 100 test_2/gcd_desc.xml test_2/gcd_stim.xml```
+```python3 fsmd-sim.py 100 test_2/gcd_desc.xml test_2/gcd_stim.xml```  
+
 ### Test 3:
 Run the following command in the base folder of the repository:  
 ```python3 fsmd-sim.py 100 test_3/gcd_desc.xml test_3/gcd_stim.xml```
+
 ---
 In either test, replace `100` with your desired maximum iterations before simulation termination.  
 ### Output
