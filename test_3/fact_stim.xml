@@ -1,0 +1,15 @@
+<fsmdstimulus>
+
+  <setinput>
+    <cycle>0</cycle>
+    <expression>in_Nr = 12650</expression>
+  </setinput>
+
+  <setinput>
+    <cycle>1</cycle>
+    <expression>in_Nr = 0</expression>
+  </setinput>
+
+  <endstate>FINISH</endstate>
+
+</fsmdstimulus>

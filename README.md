@@ -15,7 +15,7 @@ Run the following command in the base folder of the repository:
 
 ### Test 3:
 Run the following command in the base folder of the repository:  
-```python3 fsmd-sim.py 100 test_3/gcd_desc.xml test_3/gcd_stim.xml```
+```python3 fsmd-sim.py 100 test_3/fact_desc.xml test_3/fact_stim.xml```
 
 ---
 In either test, replace `100` with your desired maximum iterations before simulation termination.  

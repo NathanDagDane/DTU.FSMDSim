@@ -1,0 +1,111 @@
+<fsmddescription>
+
+    <statelist>
+        <state>INITIALIZE</state>
+        <state>DIVIDE</state>
+        <state>INCREMENT</state>
+        <state>FINISH</state>
+    </statelist>
+
+    <initialstate>INITIALIZE</initialstate>
+
+    <inputlist>
+        <input>in_Nr</input>
+    </inputlist>
+
+    <variablelist>
+        <variable>number</variable>
+        <variable>prime</variable>
+    </variablelist>
+
+    <operationlist>
+        <operation>
+            <name>Init_num</name>
+            <expression>number = in_Nr</expression>
+        </operation>
+        <operation>
+            <name>Init_prime</name>
+            <expression>prime = 2</expression>
+        </operation>
+        <operation>
+            <name>Increment</name>
+            <expression>prime = prime + 1</expression>
+        </operation>
+        <operation>
+            <name>Divide</name>
+            <expression>number = number/prime</expression>
+        </operation>
+
+        
+    </operationlist>
+
+
+    <conditionlist>
+        <condition>
+            <name>Fully_factorised</name>
+            <expression>number == 1</expression>
+        </condition>
+        <condition>
+            <name>Is_divisible</name>
+            <expression>number%prime == 0</expression>
+        </condition>
+        <condition>
+            <name>Is_not_divisible</name>
+            <expression>number%prime != 0</expression>
+        </condition>
+        
+    </conditionlist>
+
+
+    <fsmd>
+        <INITIALIZE>
+            <transition>
+                <condition>True</condition>
+                <instruction>Init_num Init_prime</instruction>
+                <nextstate>DIVIDE</nextstate>
+            </transition>
+        </INITIALIZE>
+
+        <DIVIDE>
+            <transition>
+                <condition>Fully_factorised</condition>
+                <instruction>NOP</instruction>
+                <nextstate>FINISH</nextstate>
+            </transition>
+
+            <transition>
+                <condition>Is_divisible</condition>
+                <instruction>Divide</instruction>
+                <nextstate>DIVIDE</nextstate>
+            </transition>
+
+            <transition>
+                <condition>Is_not_divisible</condition>
+                <instruction>NOP</instruction>
+                <nextstate>INCREMENT</nextstate>
+            </transition>
+        </DIVIDE>
+
+        <INCREMENT>
+            <transition>
+                <condition>True</condition>
+                <instruction>Increment</instruction>
+                <nextstate>DIVIDE</nextstate>
+            </transition>
+
+        </INCREMENT>
+
+
+        <FINISH>
+
+            <transition>
+                <condition>True</condition>
+                <instruction>NOP</instruction>
+                <nextstate>FINISH</nextstate>
+            </transition>
+
+        </FINISH>
+
+
+    </fsmd>
+</fsmddescription>
