@@ -37,7 +37,10 @@ initial_state = fsmd_des['fsmddescription']['initialstate']
 print("Initial state:")
 print('  ' + initial_state)
 
-end_state = fsmd_stim['fsmdstimulus']['endstate']
+try:
+    end_state = fsmd_stim['fsmdstimulus']['endstate']
+except:
+    end_state = fsmd_des['fsmddescription']['statelist']['state'][-1]
 
 # List of input variables
 inputs = {}
@@ -216,9 +219,13 @@ def perform_cycle():
     global cycle, state
     sel_condition = sel_instruction = None
     # Set inputs
-    for input in fsmd_stim['fsmdstimulus']['setinput']:
-        if int(input['cycle']) == cycle:
-            execute_setinput(input['expression'])
+    try:
+        for input in fsmd_stim['fsmdstimulus']['setinput']:
+            if int(input['cycle']) == cycle:
+                execute_setinput(input['expression'])
+    except:
+        # No stimulus
+        pass
 
     print_init_cycle()
 
