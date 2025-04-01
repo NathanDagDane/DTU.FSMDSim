@@ -1,5 +1,10 @@
-<h2 align="center">Finite State Machine with Datastream Simulation</h2>
-<h3 align="center">For DTU Cyber Systems Intro</h3>
+<div align="center">
+  <h2>Finite State Machine with Datastream Simulation</h2>
+  <a href="">
+    <img src="https://github.com/user-attachments/assets/e21f2d45-6775-48d8-bf8b-9b1cb99d22e5" alt="Logo" height="80">
+  </a>
+  <h3>For DTU Cyber Systems Intro</h3>
+</div>
 
 ## Prerequisites
 ### VENV:
