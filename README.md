@@ -1,5 +1,5 @@
 <div align="center">
-  <h2>Finite State Machine with Datastream Simulation</h2>
+  <h2>Finite State Machine with Datapath Simulation</h2>
   <a href="">
     <img src="https://github.com/user-attachments/assets/e21f2d45-6775-48d8-bf8b-9b1cb99d22e5" alt="Logo" height="80">
   </a>
